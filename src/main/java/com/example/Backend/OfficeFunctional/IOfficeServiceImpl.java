@@ -1,6 +1,9 @@
 package com.example.Backend.OfficeFunctional;
 
 import com.example.Backend.Errors.AppException;
+import com.example.Backend.KeyFunctional.KeyDTO;
+import com.example.Backend.KeyFunctional.KeyEntity;
+import com.example.Backend.KeyFunctional.KeyRepository;
 import com.example.Backend.Relations.UserToOffice;
 import com.example.Backend.Relations.UserToOfficeRepository;
 import com.example.Backend.TokenFunctional.TokenEntity;
@@ -23,6 +26,7 @@ public class IOfficeServiceImpl implements IOfficeService {
     private final TokenRepository tokenRepository;
     private final UserToOfficeRepository userToOfficeRepository;
     private final UserRepository userRepository;
+    private final KeyRepository keyRepository;
 
     @SneakyThrows
     @Override
@@ -62,6 +66,10 @@ public class IOfficeServiceImpl implements IOfficeService {
             if(userAppointmentDTO.getRole() == null || userAppointmentDTO.getRole().equals("")){
                 throw new AppException(400, "Поле роль не может быть пустым");
             }
+            //тут нужно сделать проверку не был ли пользователь добавлен раньше
+            if(userToOfficeRepository.findByUserIdAndOfficeId(userAppointmentDTO.getId(),Officeid).isPresent()){
+                throw new AppException(400, "Пользователь уже добавлен в данный офис");
+            }
             UserEntity newUserEntity = userRepository.findById(userAppointmentDTO.getId()).get();
             UserToOffice userToOffice = new UserToOffice(newUserEntity, officeRepository.findById(Officeid).get(), userAppointmentDTO.getRole());
             userToOfficeRepository.save(userToOffice);
@@ -72,13 +80,42 @@ public class IOfficeServiceImpl implements IOfficeService {
         }
     }
 
+    @SneakyThrows
     @Override
     public OfficeUsers viewAll(String tokenValue, UUID officeid) {
+
         var users = userToOfficeRepository.findAllByOfficeId(officeid);
+        if (users.isEmpty()){
+            throw new AppException(404, "Пользователи не найдены");
+        }
         OfficeUsers userOfficeDTOS = new OfficeUsers();
-        users.forEach(user->{
-            userOfficeDTOS.getUsers().add(new UserViewDTO(userRepository.findById(user.get().getUser().getId()).get(), user.get().getRole()));
+        users.get().forEach(user->{
+            userOfficeDTOS.getUsers().add(new UserViewDTO(userRepository.findById(user.getUser().getId()).get(), user.getRole()));
         });
         return userOfficeDTOS;
+    }
+
+    @SneakyThrows
+    @Override
+    public OfficeAllInfoDTO allinfo(String tokenValue, UUID officeid) {
+        Optional<TokenEntity> tokenEntityOptional = tokenRepository.findByValue(tokenValue);
+        if(tokenEntityOptional.isEmpty()){
+            throw new AppException(401, "Unauthorized.");
+        }
+        if(officeRepository.findById(officeid).isEmpty()){
+            throw new AppException(400, "Офис не найден.");
+        }
+        OfficeAllinfoModel officeAllinfoModel = new OfficeAllinfoModel(officeRepository.findById(officeid).get());
+        if(keyRepository.findByOfficeId(officeid).isPresent()) {
+            keyRepository.findByOfficeId(officeid).get().forEach(keyEntity -> {
+                officeAllinfoModel.addKey(new KeyDTO(keyEntity));
+            });
+        }
+        if(userToOfficeRepository.findAllByOfficeId(officeid).isPresent()) {
+            userToOfficeRepository.findAllByOfficeId(officeid).get().forEach(userToOffice -> {
+                officeAllinfoModel.addUser(new UserOfficeDTO(userToOffice));
+            });
+        }
+        return new OfficeAllInfoDTO(officeAllinfoModel);
     }
 }
