@@ -33,5 +33,4 @@ public class UserToOffice {
         this.user = user;
         this.office = office;
         this.Role = Role;
-    }
-}
+    }}

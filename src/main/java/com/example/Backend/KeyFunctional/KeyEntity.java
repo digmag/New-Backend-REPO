@@ -1,8 +1,7 @@
 package com.example.Backend.KeyFunctional;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.example.Backend.UserFunctional.UserEntity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -19,10 +18,13 @@ public class KeyEntity {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    UUID keyId;
-    UUID officeId;
-    String officeName;
-    Integer officeNumber;
+    private UUID keyId;
+    private UUID officeId;
+    private String officeName;
+    private Integer officeNumber;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     public KeyEntity(KeyDTO keyDTO, UUID officeId){
         this.officeId = officeId;
