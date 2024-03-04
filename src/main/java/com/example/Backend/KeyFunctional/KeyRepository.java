@@ -9,4 +9,6 @@ import java.util.UUID;
 @Repository
 public interface KeyRepository extends JpaRepository<KeyEntity, UUID> {
     Optional<List<KeyEntity>> findByOfficeId(UUID officeid);
+
+    Optional<KeyEntity> findKeyEntityByOfficeNameAndOfficeNumber(String name,Integer number);
 }
