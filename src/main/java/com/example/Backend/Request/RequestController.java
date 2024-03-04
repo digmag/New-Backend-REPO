@@ -1,8 +1,11 @@
 package com.example.Backend.Request;
 
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +31,7 @@ public class RequestController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createRequestList(@RequestHeader(name = "Authorization") String Authorization, @RequestBody RequestDTO body){
+    public ResponseEntity createRequest(@RequestHeader(name = "Authorization") String Authorization, @RequestBody RequestDTO body){
         String tokenvalue = Authorization.split(" ")[1];
         try{
             return ResponseEntity
@@ -40,7 +43,21 @@ public class RequestController {
                     .badRequest()
                     .body(e);
         }
+    }
 
+    @PutMapping("/create")
+    public ResponseEntity updateRequest(@RequestHeader(name = "Authorization") String Authorization, @PathParam("requestId") UUID requestId, @PathParam("status") RequestStatus status){
+        String tokenvalue = Authorization.split(" ")[1];
+        try{
+            return ResponseEntity
+                    .ok()
+                    .body(iRequestService.updateRequest(Authorization,requestId,status));
+        }
+        catch (Exception e){
+            return  ResponseEntity
+                    .badRequest()
+                    .body(e);
+        }
     }
 
 }
