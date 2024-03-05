@@ -4,6 +4,7 @@ import com.example.Backend.Errors.AppException;
 import com.example.Backend.Relations.UserToOffice;
 import com.example.Backend.Relations.UserToOfficeRepository;
 import com.example.Backend.TokenFunctional.TokenRepository;
+import com.example.Backend.statusCode.StatusCode;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class IKeyServiceImpl implements IKeyService {
             throw new AppException(400, "Пользователь не принадлежит к данному офису");
         }
         UserToOffice admin = userToOfficeRepository.findByUserIdAndOfficeId(tokenRepository.findByValue(tokenvalue).get().getUserid(), officeId).get();
-        if(!admin.getRole().equals("Admin")){
+        if(!admin.getRole().equals("Administrator") || admin.getRole().equals("Worker")){
             throw new AppException(403, "Невозможно создать ключ");
         }
         KeyEntity keyEntity = new KeyEntity(keyDTO,officeId);
@@ -44,8 +45,8 @@ public class IKeyServiceImpl implements IKeyService {
             throw new AppException(400, "Пользователь не принадлежит к данному офису");
         }
         UserToOffice admin = userToOfficeRepository.findByUserIdAndOfficeId(tokenRepository.findByValue(tokenvalue).get().getUserid(), officeId).get();
-        if(!admin.getRole().equals("Admin")){
-            throw new AppException(403, "Невозможно создать ключ");
+        if(!admin.getRole().equals("Administrator") || admin.getRole().equals("Worker")){
+            throw new AppException(403, "Невозможно изменить ключ");
         }
         if(keyRepository.findById(keyDTO.getKeyId()).isEmpty()){
             throw new AppException(404, "Id ключа не найден");
@@ -55,5 +56,25 @@ public class IKeyServiceImpl implements IKeyService {
         keyEntity.setOfficeNumber(keyDTO.getOfficeNumber());
         keyRepository.save(keyEntity);
         return keyDTO;
+    }
+
+    @SneakyThrows
+    @Override
+    public StatusCode deleteKey(UUID officeId, String tokenvalue, UUID keyId) {
+        if(tokenRepository.findByValue(tokenvalue).isEmpty()){
+            throw new AppException(401,"Unauthorized");
+        }
+        if(userToOfficeRepository.findByUserIdAndOfficeId(tokenRepository.findByValue(tokenvalue).get().getUserid(), officeId).isEmpty()){
+            throw new AppException(400, "Пользователь не принадлежит к данному офису");
+        }
+        UserToOffice admin = userToOfficeRepository.findByUserIdAndOfficeId(tokenRepository.findByValue(tokenvalue).get().getUserid(), officeId).get();
+        if(!admin.getRole().equals("Administrator") || admin.getRole().equals("Worker")){
+            throw new AppException(403, "Невозможно создать ключ");
+        }
+        if(keyRepository.findById(keyId).isEmpty()){
+            throw new AppException(404, "Id ключа не найден");
+        }
+        keyRepository.deleteById(keyId);
+        return new StatusCode(200, "Ключ удален");
     }
 }

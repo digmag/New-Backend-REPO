@@ -13,7 +13,7 @@ public class KeyController {
     private final IKeyService iKeyService;
 
     @PostMapping("/{officeId}/create")
-    public ResponseEntity<?> createKey(UUID officeId, @RequestHeader(name = "Authorization") String Authorization, @RequestBody KeyDTO keyDTO){
+    public ResponseEntity<?> createKey(@PathVariable UUID officeId, @RequestHeader(name = "Authorization") String Authorization, @RequestBody KeyDTO keyDTO){
         String tokenvalue = Authorization.split(" ")[1];
         try{
             return ResponseEntity
@@ -26,7 +26,7 @@ public class KeyController {
     }
 
     @PutMapping("/{officeId}/edit")
-    public ResponseEntity<?> editKey(UUID officeId, @RequestHeader(name = "Authorization") String Authorization, @RequestBody KeyDTO keyDTO){
+    public ResponseEntity<?> editKey(@PathVariable UUID officeId, @RequestHeader(name = "Authorization") String Authorization, @RequestBody KeyDTO keyDTO){
         String tokenvalue = Authorization.split(" ")[1];
         try{
             return ResponseEntity
@@ -36,6 +36,21 @@ public class KeyController {
         catch (Exception e){
             return  ResponseEntity
                     .badRequest()
+                    .body(e);
+        }
+    }
+
+    @DeleteMapping("/{officeId}/delete/{keyId}")
+    public ResponseEntity<?> deleteKey(@PathVariable UUID officeId, @RequestHeader(name = "Authorization") String Authorization, @PathVariable UUID keyId){
+        String tokenValue = Authorization.split(" ")[1];
+        try{
+            return ResponseEntity
+                    .ok()
+                    .body(iKeyService.deleteKey(officeId,tokenValue,keyId));
+        }
+        catch (Exception e){
+            return ResponseEntity
+                    .status(500)
                     .body(e);
         }
     }
