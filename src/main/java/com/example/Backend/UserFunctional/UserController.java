@@ -67,6 +67,7 @@ public class UserController {
         }
     }
 
+    @GetMapping("/users")
     public ResponseEntity<?> getUserByName(@RequestHeader(name = "Authorization") String Authorization, @PathParam("name") String Name){
         String tokenValue = Authorization.split(" ")[1];
         return ResponseEntity.ok().body(iUserService.Allusers(tokenValue, Name));
