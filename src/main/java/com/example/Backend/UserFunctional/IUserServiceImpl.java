@@ -90,7 +90,7 @@ public class IUserServiceImpl implements IUserService {
             throw new AppException(401, "Unauthorized");
         }
         UsersResponseDTO usersResponseDTO = new UsersResponseDTO();
-        userRepository.findAllByFullname(name).forEach(userEntity -> {
+        userRepository.findAllByName(name).forEach(userEntity -> {
             UserResponseDTO userResponseDTO = new UserResponseDTO(userEntity);
             usersResponseDTO.addToList(userResponseDTO);
         });
