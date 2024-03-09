@@ -3,6 +3,7 @@ package com.example.Backend.UserFunctional;
 import com.example.Backend.Errors.AppException;
 import com.example.Backend.TokenFunctional.TokenDTO;
 import com.example.Backend.statusCode.StatusCode;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,5 +65,10 @@ public class UserController {
         catch (Exception e){
             return ResponseEntity.status(401).body(new StatusCode(401, "Unauthorized"));
         }
+    }
+
+    public ResponseEntity<?> getUserByName(@RequestHeader(name = "Authorization") String Authorization, @PathParam("name") String Name){
+        String tokenValue = Authorization.split(" ")[1];
+        return ResponseEntity.ok().body(iUserService.Allusers(tokenValue, Name));
     }
 }

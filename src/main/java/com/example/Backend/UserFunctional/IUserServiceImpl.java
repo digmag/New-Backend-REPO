@@ -83,4 +83,18 @@ public class IUserServiceImpl implements IUserService {
         return new StatusCode(200, "Выход");
     }
 
+    @SneakyThrows
+    @Override
+    public UsersResponseDTO Allusers(String token, String name) {
+        if(tokenRepository.findByValue(token).isEmpty()){
+            throw new AppException(401, "Unauthorized");
+        }
+        UsersResponseDTO usersResponseDTO = new UsersResponseDTO();
+        userRepository.findAllByName(name).forEach(userEntity -> {
+            UserResponseDTO userResponseDTO = new UserResponseDTO(userEntity);
+            usersResponseDTO.addToList(userResponseDTO);
+        });
+        return usersResponseDTO;
+    }
+
 }

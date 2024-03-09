@@ -8,4 +8,6 @@ public interface IUserService {
     TokenDTO login(UserDTO userDTO);
     UserViewDTO viewInfo(String tokenValue);
     StatusCode logout(String tokenValue);
+
+    UsersResponseDTO Allusers(String token,String name);
 }
