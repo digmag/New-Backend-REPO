@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface KeyRepository extends JpaRepository<KeyEntity, UUID> {
-    Optional<List<KeyEntity>> findByOfficeId(UUID officeid);
-
-    Optional<KeyEntity> findKeyEntityByOfficeNameAndOfficeNumber(String name,Integer number);
+    Optional<List<KeyEntity>> findByOfficeId(UUID officeId);
+    Optional<KeyEntity> findKeyEntityByOfficeId(UUID officeId);
 }

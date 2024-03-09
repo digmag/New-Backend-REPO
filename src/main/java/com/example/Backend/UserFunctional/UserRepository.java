@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByLogin(String login);
     Optional<UserEntity> findByLoginAndPassword(String login, String password);
 
-    @Query("SELECT e FROM UserEntity e WHERE e.name LIKE %:name%")
+    @Query("SELECT e FROM UserEntity e WHERE e.fullname LIKE %:name%")
     List<UserEntity> findAllByName(String name);
 }

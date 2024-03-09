@@ -35,7 +35,7 @@ public class IRequestServiceImpl implements IRequestService {
 
     @Override
     @SneakyThrows
-    public List<RequestEntity> getRequestList(String tokenValue){
+    public List<RequestDTO> getRequestList(String tokenValue){
 
         Optional<TokenEntity> tokenEntity = tokenRepository.findByValue(tokenValue);
 
@@ -45,7 +45,13 @@ public class IRequestServiceImpl implements IRequestService {
 
         if(requestEntityList.isEmpty()) throw new Exception("No request");
 
-        return requestEntityList.get();
+        List<RequestDTO> list = new ArrayList<>();
+
+        for(RequestEntity re : requestEntityList.get()){
+            list.add(new RequestDTO(re));
+        }
+
+        return list;
 
     }
 
@@ -57,7 +63,7 @@ public class IRequestServiceImpl implements IRequestService {
 
         if(tokenEntity.isEmpty()) throw new Exception("Invalid token");
 
-        Optional<KeyEntity> key = keyRepository.findKeyEntityByOfficeNameAndOfficeNumber(requestDTO.getOfficeName(),requestDTO.getOfficeNumber());
+        Optional<KeyEntity> key = keyRepository.findKeyEntityByOfficeId(requestDTO.getOfficeId());
 
         if(key.isEmpty()) throw new Exception("Wrong OfficeName or OfficeNumber");
 
@@ -85,7 +91,7 @@ public class IRequestServiceImpl implements IRequestService {
         RequestEntity requestEntity = requestRepository.findById(requestId).get();
 
         KeyEntity keyEntity = requestEntity.getKey();
-        if(keyEntity.getOfficeId() != officeEntity.get().getId()) throw new Exception("Key doesn't belong to this office");
+        if(!keyEntity.getOfficeId().equals(officeEntity.get().getId())) throw new Exception("Key doesn't belong to this office");
 
         if(status == RequestStatus.GIVEN){
             keyEntity.setUser(user);

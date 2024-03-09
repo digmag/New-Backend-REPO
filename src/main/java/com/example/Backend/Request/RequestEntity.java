@@ -26,6 +26,7 @@ public class RequestEntity {
     )
     private UUID id;
     private UUID userId;
+    private UUID officeId;
 
     private RequestStatus status;
     private Date requestCreationDateTime;
@@ -39,6 +40,7 @@ public class RequestEntity {
         this.status = RequestStatus.IN_PROCESS;
         this.requestCreationDateTime = requestDTO.getRequestCreationDateTime();
         this.requestedDateTime = requestDTO.getRequestedDateTime();
+        this.officeId = requestDTO.getOfficeId();
         this.key = key;
     }
 }

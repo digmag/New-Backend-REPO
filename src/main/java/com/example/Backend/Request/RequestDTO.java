@@ -19,13 +19,19 @@ public class RequestDTO {
 
     private UUID keyId;
     private UUID officeId;
-    private String officeName;
-    private Integer officeNumber;
 
-    public RequestDTO(Date requestedDateTime, UUID keyId, String officeName, Integer officeNumber) {
+    public RequestDTO(Date requestedDateTime, UUID keyId, UUID officeId) {
         this.requestedDateTime = requestedDateTime;
         this.keyId = keyId;
-        this.officeName = officeName;
-        this.officeNumber = officeNumber;
+        this.officeId = officeId;
+    }
+
+    public RequestDTO(RequestEntity entity){
+        this.id = entity.getId();
+        this.status = entity.getStatus();
+        this.requestCreationDateTime = entity.getRequestCreationDateTime();
+        this.requestedDateTime = entity.getRequestedDateTime();
+        this.keyId = entity.getKey().getKeyId();
+        this.officeId = entity.getOfficeId();
     }
 }

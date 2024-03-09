@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface IRequestService {
 
-    List<RequestEntity> getRequestList(String tokenValue);
+    List<RequestDTO> getRequestList(String tokenValue);
 
     StatusCode createNewRequest(String tokenValue, RequestDTO requestDTO);
 
