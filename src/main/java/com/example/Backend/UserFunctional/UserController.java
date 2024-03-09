@@ -68,8 +68,9 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<?> getUserByName(@RequestHeader(name = "Authorization") String Authorization, @PathParam("name") String Name){
+    public ResponseEntity<?> getUserByName(@RequestHeader(name = "Authorization") String Authorization, @PathParam("name") String name){
+        if(name==null) name = "";
         String tokenValue = Authorization.split(" ")[1];
-        return ResponseEntity.ok().body(iUserService.Allusers(tokenValue, Name));
+        return ResponseEntity.ok().body(iUserService.Allusers(tokenValue, name));
     }
 }
