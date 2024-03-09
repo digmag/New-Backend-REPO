@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -27,8 +28,8 @@ public class RequestEntity {
     private UUID userId;
 
     private RequestStatus status;
-    private LocalDateTime requestCreationDateTime;
-    private LocalDateTime requestedDateTime;
+    private Date requestCreationDateTime;
+    private Date requestedDateTime;
 
     @ManyToOne
     private KeyEntity key;

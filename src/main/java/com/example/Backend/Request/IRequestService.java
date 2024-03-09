@@ -13,4 +13,6 @@ public interface IRequestService {
 
     StatusCode updateRequest(String tokenValue, UUID requestId, RequestStatus status);
 
+    void deletePastRequest();
+
 }

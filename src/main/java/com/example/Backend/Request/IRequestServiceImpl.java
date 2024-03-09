@@ -9,15 +9,14 @@ import com.example.Backend.TokenFunctional.TokenRepository;
 import com.example.Backend.UserFunctional.UserEntity;
 import com.example.Backend.UserFunctional.UserRepository;
 import com.example.Backend.statusCode.StatusCode;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.catalina.User;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -98,5 +97,17 @@ public class IRequestServiceImpl implements IRequestService {
 
         return new StatusCode(200,"request updated");
     }
-
+    @Override
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void deletePastRequest(){
+        Date NowDate = new Date();
+        List<RequestEntity> requests = requestRepository.findAll();
+        requests.forEach(request ->{
+            if(NowDate.after(request.getRequestedDateTime()) && (request.getStatus() == RequestStatus.DECLINED
+                                                             || request.getStatus() == RequestStatus.EXPIRED)){
+                requestRepository.deleteById(request.getId());
+            }
+        });
+    }
 }
