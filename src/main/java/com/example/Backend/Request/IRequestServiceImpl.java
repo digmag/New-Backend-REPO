@@ -105,7 +105,8 @@ public class IRequestServiceImpl implements IRequestService {
         List<RequestEntity> requests = requestRepository.findAll();
         requests.forEach(request ->{
             if(NowDate.after(request.getRequestedDateTime()) && (request.getStatus() == RequestStatus.DECLINED
-                                                             || request.getStatus() == RequestStatus.EXPIRED)){
+                                                             || request.getStatus() == RequestStatus.EXPIRED
+                                                             || request.getStatus() != RequestStatus.IN_PROCESS)){
                 requestRepository.deleteById(request.getId());
             }
         });
