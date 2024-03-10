@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RequestMapping("/keys")
 public class KeyController {
@@ -18,11 +19,10 @@ public class KeyController {
         try{
             return ResponseEntity
                     .ok()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(iKeyService.createKey(officeId, tokenvalue, keyDTO));
         }
         catch (Exception e){
-            return ResponseEntity.badRequest().header("Access-Control-Allow-Origin","*").body(e);
+            return ResponseEntity.badRequest().body(e);
         }
     }
 
@@ -32,13 +32,11 @@ public class KeyController {
         try{
             return ResponseEntity
                     .ok()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(iKeyService.editKey(officeId, tokenvalue, keyDTO));
         }
         catch (Exception e){
             return  ResponseEntity
                     .badRequest()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(e);
         }
     }
@@ -49,13 +47,11 @@ public class KeyController {
         try{
             return ResponseEntity
                     .ok()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(iKeyService.deleteKey(officeId,tokenValue,keyId));
         }
         catch (Exception e){
             return ResponseEntity
                     .status(500)
-                    .header("Access-Control-Allow-Origin","*")
                     .body(e);
         }
     }
@@ -63,10 +59,10 @@ public class KeyController {
     public ResponseEntity<?> keyTo(@PathVariable UUID userid, @RequestHeader(name = "Authorization") String Authorization, @PathVariable UUID keyid){
         String tokenValue = Authorization.split(" ")[1];
         try{
-            return ResponseEntity.ok().header("Access-Control-Allow-Origin","*").body(iKeyService.transitKey(userid, tokenValue, keyid));
+            return ResponseEntity.ok().body(iKeyService.transitKey(userid, tokenValue, keyid));
         }
         catch (Exception e){
-            return ResponseEntity.status(400).header("Access-Control-Allow-Origin","*").body(e);
+            return ResponseEntity.status(400).body(e);
         }
     }
 
@@ -74,10 +70,10 @@ public class KeyController {
     public ResponseEntity<?> mykeys(@RequestHeader(name = "Authorization") String Authorization){
         String tokenValue = Authorization.split(" ")[1];
         try {
-            return ResponseEntity.ok().header("Access-Control-Allow-Origin","*").body(iKeyService.myKeys(tokenValue));
+            return ResponseEntity.ok().body(iKeyService.myKeys(tokenValue));
         }
         catch (Exception e){
-            return ResponseEntity.status(400).header("Access-Control-Allow-Origin","*").body(e);
+            return ResponseEntity.status(400).body(e);
         }
     }
 }

@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/api/office")
 public class OfficeController {
     private final IOfficeService iOfficeService;
@@ -20,7 +21,6 @@ public class OfficeController {
         try{
             return ResponseEntity
                     .ok()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(
                             iOfficeService.createOffice(
                                     officeCreateDTO,
@@ -31,7 +31,6 @@ public class OfficeController {
         catch (Exception e){
             return ResponseEntity
                     .status(401)
-                    .header("Access-Control-Allow-Origin","*")
                     .body(e);
         }
     }
@@ -44,13 +43,11 @@ public class OfficeController {
         try{
             return ResponseEntity
                     .ok()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(iOfficeService.appointment(id, userAppointmentDTO, tokenValue));
         }
         catch (Exception e){
             return ResponseEntity
                     .status(401)
-                    .header("Access-Control-Allow-Origin","*")
                     .body(e);
         }
     }
@@ -73,13 +70,11 @@ public class OfficeController {
         try {
             return ResponseEntity
                     .ok()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(iOfficeService.allinfo(tokenValue, id));
         }
         catch (Exception e){
             return ResponseEntity
                     .status(400)
-                    .header("Access-Control-Allow-Origin","*")
                     .body(e);
         }
     }

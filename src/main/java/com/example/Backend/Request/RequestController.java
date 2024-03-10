@@ -9,6 +9,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @RequestMapping("/request")
 public class RequestController {
 
@@ -20,13 +21,11 @@ public class RequestController {
         try{
             return ResponseEntity
                     .ok()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(iRequestService.getRequestList(tokenvalue));
         }
         catch (Exception e){
             return  ResponseEntity
                     .badRequest()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(e);
         }
 
@@ -38,13 +37,11 @@ public class RequestController {
         try{
             return ResponseEntity
                     .ok()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(iRequestService.createNewRequest(tokenvalue,body));
         }
         catch (Exception e){
             return  ResponseEntity
                     .badRequest()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(e);
         }
     }
@@ -55,13 +52,11 @@ public class RequestController {
         try{
             return ResponseEntity
                     .ok()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(iRequestService.updateRequest(tokenvalue,requestId,status));
         }
         catch (Exception e){
             return  ResponseEntity
                     .badRequest()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(e);
         }
     }

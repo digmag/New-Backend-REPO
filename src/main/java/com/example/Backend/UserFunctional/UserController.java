@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/api/account")
 public class UserController {
     private final IUserService iUserService;
@@ -20,13 +21,11 @@ public class UserController {
             TokenDTO tokenDTO = iUserService.registration(userDTO);
             return ResponseEntity
                     .ok()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(tokenDTO);
         }
         catch (Exception e){
             return ResponseEntity
                     .badRequest()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(new StatusCode(400, "Bad Request"));
         }
     }
@@ -35,10 +34,10 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO){
         try {
             TokenDTO tokenDTO = iUserService.login(userDTO);
-            return ResponseEntity.ok().header("Access-Control-Allow-Origin","*").body(tokenDTO);
+            return ResponseEntity.ok().body(tokenDTO);
         }
         catch (Exception e){
-            return ResponseEntity.badRequest().header("Access-Control-Allow-Origin","*").body(new StatusCode(400, "Bad Request"));
+            return ResponseEntity.badRequest().body(new StatusCode(400, "Bad Request"));
         }
     }
 
@@ -49,13 +48,11 @@ public class UserController {
             UserViewDTO userViewDTO = iUserService.viewInfo(tokenValue);
             return ResponseEntity
                     .ok()
-                    .header("Access-Control-Allow-Origin","*")
                     .body(userViewDTO);
         }
         catch (Exception e){
             return ResponseEntity
                     .status(401)
-                    .header("Access-Control-Allow-Origin","*")
                     .body(new StatusCode(401, "Unauthorized"));
         }
     }
@@ -64,10 +61,10 @@ public class UserController {
     public ResponseEntity<?> logout(@RequestHeader(name = "Authorization") String Authorization){
         String tokenValue = Authorization.split(" ")[1];
         try{
-            return ResponseEntity.ok().header("Access-Control-Allow-Origin","*").body(iUserService.logout(tokenValue));
+            return ResponseEntity.ok().body(iUserService.logout(tokenValue));
         }
         catch (Exception e){
-            return ResponseEntity.status(401).header("Access-Control-Allow-Origin","*").body(new StatusCode(401, "Unauthorized"));
+            return ResponseEntity.status(401).body(new StatusCode(401, "Unauthorized"));
         }
     }
 
@@ -75,6 +72,6 @@ public class UserController {
     public ResponseEntity<?> getUserByName(@RequestHeader(name = "Authorization") String Authorization, @PathParam("name") String name){
         if(name==null) name = "";
         String tokenValue = Authorization.split(" ")[1];
-        return ResponseEntity.ok().header("Access-Control-Allow-Origin","*").body(iUserService.Allusers(tokenValue, name));
+        return ResponseEntity.ok().body(iUserService.Allusers(tokenValue, name));
     }
 }
