@@ -15,7 +15,7 @@ public class RequestController {
     private final IRequestService iRequestService;
 
     @GetMapping("/list")
-    public ResponseEntity getList(@RequestHeader(name = "Authorization") String Authorization){
+    public ResponseEntity<?> getList(@RequestHeader(name = "Authorization") String Authorization){
         String tokenvalue = Authorization.split(" ")[1];
         try{
             return ResponseEntity
@@ -31,7 +31,7 @@ public class RequestController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createRequest(@RequestHeader(name = "Authorization") String Authorization, @RequestBody RequestDTO body){
+    public ResponseEntity<?> createRequest(@RequestHeader(name = "Authorization") String Authorization, @RequestBody RequestDTO body){
         String tokenvalue = Authorization.split(" ")[1];
         try{
             return ResponseEntity
@@ -46,7 +46,7 @@ public class RequestController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity updateRequest(@RequestHeader(name = "Authorization") String Authorization, @PathParam("requestId") UUID requestId, @PathParam("status") RequestStatus status){
+    public ResponseEntity<?> updateRequest(@RequestHeader(name = "Authorization") String Authorization, @PathParam("requestId") UUID requestId, @PathParam("status") RequestStatus status){
         String tokenvalue = Authorization.split(" ")[1];
         try{
             return ResponseEntity
