@@ -116,6 +116,8 @@ public class IOfficeServiceImpl implements IOfficeService {
         }
         if(userToOfficeRepository.findAllByOfficeId(officeid).isPresent()) {
             userToOfficeRepository.findAllByOfficeId(officeid).get().forEach(userToOffice -> {
+                UserOfficeDTO userOfficeDTO = new UserOfficeDTO(userToOffice);
+                userOfficeDTO.setRole(userToOffice.getRole());
                 officeAllinfoModel.addUser(new UserOfficeDTO(userToOffice));
             });
         }
