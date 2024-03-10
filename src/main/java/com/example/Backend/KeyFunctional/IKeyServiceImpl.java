@@ -94,7 +94,7 @@ public class IKeyServiceImpl implements IKeyService {
         if(userEntity.isEmpty()){
             throw new AppException(401, "Unautorized");
         }
-        List<KeyEntity> keyEntities = keyRepository.findAllByUserEntity(userEntity.get());
+        List<KeyEntity> keyEntities = keyRepository.findAllByUserEntity(userEntity.get().getId());
         List<KeyDTO> keyDTOS = new ArrayList<>();
         keyEntities.forEach(keyEntity -> {
             keyDTOS.add(new KeyDTO(keyEntity));
