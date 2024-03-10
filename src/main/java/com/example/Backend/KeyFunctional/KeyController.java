@@ -18,10 +18,11 @@ public class KeyController {
         try{
             return ResponseEntity
                     .ok()
+                    .header("Access-Control-Allow-Origin","*")
                     .body(iKeyService.createKey(officeId, tokenvalue, keyDTO));
         }
         catch (Exception e){
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().header("Access-Control-Allow-Origin","*").body(e);
         }
     }
 
@@ -31,11 +32,13 @@ public class KeyController {
         try{
             return ResponseEntity
                     .ok()
+                    .header("Access-Control-Allow-Origin","*")
                     .body(iKeyService.editKey(officeId, tokenvalue, keyDTO));
         }
         catch (Exception e){
             return  ResponseEntity
                     .badRequest()
+                    .header("Access-Control-Allow-Origin","*")
                     .body(e);
         }
     }
@@ -46,11 +49,13 @@ public class KeyController {
         try{
             return ResponseEntity
                     .ok()
+                    .header("Access-Control-Allow-Origin","*")
                     .body(iKeyService.deleteKey(officeId,tokenValue,keyId));
         }
         catch (Exception e){
             return ResponseEntity
                     .status(500)
+                    .header("Access-Control-Allow-Origin","*")
                     .body(e);
         }
     }
