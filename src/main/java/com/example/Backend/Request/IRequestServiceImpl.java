@@ -68,7 +68,7 @@ public class IRequestServiceImpl implements IRequestService {
 
         if(tokenEntity.isEmpty()) throw new Exception("Invalid token");
 
-        Optional<KeyEntity> key = keyRepository.findKeyEntityByOfficeId(requestDTO.getOfficeId());
+        Optional<KeyEntity> key = keyRepository.findKeyEntityByOfficeIdAndKeyId(requestDTO.getOfficeId(), requestDTO.getKeyId());
 
         if(key.isEmpty()) throw new Exception("Wrong OfficeName or OfficeNumber");
 
