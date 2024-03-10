@@ -15,8 +15,8 @@ services:
 
   client-backend:
     build:
-    dockerfile: Dockerfile
-    context: .
+      dockerfile: Dockerfile
+      context: .
     image: docker.io/smilole/backend-java
     ports:
       - "8181:8181"
