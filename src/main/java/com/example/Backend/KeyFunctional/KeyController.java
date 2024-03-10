@@ -59,7 +59,7 @@ public class KeyController {
                     .body(e);
         }
     }
-    @PostMapping("{keyid}/transit/{userid}")
+    @PostMapping("/{keyid}/transit/{userid}")
     public ResponseEntity<?> keyTo(@PathVariable UUID userid, @RequestHeader(name = "Authorization") String Authorization, @PathVariable UUID keyid){
         String tokenValue = Authorization.split(" ")[1];
         try{
