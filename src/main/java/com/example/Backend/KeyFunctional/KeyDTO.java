@@ -20,6 +20,9 @@ public class KeyDTO {
         this.officeName = keyEntity.getOfficeName();
         this.officeNumber = keyEntity.getOfficeNumber();
         this.officeID = keyEntity.getOfficeId();
+        if(keyEntity.getUser() != null){
+            this.userViewDTO = new UserViewDTO(keyEntity.getUser());
+        }
     }
     public KeyDTO(){}
 }
