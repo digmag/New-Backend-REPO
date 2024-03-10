@@ -14,16 +14,18 @@ services:
       - my-network
 
   client-backend:
-    build:
-      dockerfile: Dockerfile
-      context: .
-    ports:
-      - "8181:8181"
     depends_on:
       - service-db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8181:8181"
     environment:
       - SERVER_PORT= 8181
       - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/docker
+      - SPRING_DATASOURCE_USERNAME=docker
+      - SPRING_DATASOURCE_PASSWORD=docker
     networks:
       - my-network
 
@@ -33,4 +35,3 @@ networks:
 
 volumes:
   db-data:
-  pgadmin-data:

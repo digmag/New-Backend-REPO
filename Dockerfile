@@ -1,8 +1,7 @@
 FROM maven:3.8.4-openjdk-17 as builder
 WORKDIR /app
 COPY . /app/.
-RUN apt-get install maven
-RUN mvn -f /app/pom.xml clean package -Dmaven.test.skip=false
+RUN mvn -f /app/pom.xml clean install -Dmaven.test.skip
 
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
