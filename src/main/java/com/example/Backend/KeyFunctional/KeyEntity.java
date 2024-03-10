@@ -25,7 +25,7 @@ public class KeyEntity {
     private String officeName;
     private Integer officeNumber;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
