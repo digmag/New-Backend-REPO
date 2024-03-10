@@ -95,11 +95,11 @@ public class IKeyServiceImpl implements IKeyService {
             throw new AppException(401, "Unautorized");
         }
         List<KeyEntity> keyEntities = keyRepository.findAllByUser(userEntity.get());
-        List<KeyDTO> keyDTOS = new ArrayList<>();
+        List<KeyDTO> keyDTOs = new ArrayList<>();
         keyEntities.forEach(keyEntity -> {
-            keyDTOS.add(new KeyDTO(keyEntity));
+            keyDTOs.add(new KeyDTO(keyEntity));
         });
-        return keyDTOS;
+        return keyDTOs;
     }
 
     @SneakyThrows
