@@ -1,9 +1,11 @@
 package com.example.Backend.Request;
 
+import com.example.Backend.Errors.AppException;
 import com.example.Backend.KeyFunctional.KeyEntity;
 import com.example.Backend.KeyFunctional.KeyRepository;
 import com.example.Backend.OfficeFunctional.OfficeEntity;
 import com.example.Backend.OfficeFunctional.OfficeRepository;
+import com.example.Backend.Relations.UserToOfficeRepository;
 import com.example.Backend.TokenFunctional.TokenEntity;
 import com.example.Backend.TokenFunctional.TokenRepository;
 import com.example.Backend.UserFunctional.UserEntity;
@@ -31,6 +33,8 @@ public class IRequestServiceImpl implements IRequestService {
     private final OfficeRepository officeRepository;
 
     private final UserRepository userRepository;
+
+    private final UserToOfficeRepository userToOfficeRepository;
 
 
     @Override
@@ -83,14 +87,19 @@ public class IRequestServiceImpl implements IRequestService {
     public StatusCode updateRequest(String tokenValue, UUID requestId, RequestStatus status){
 
         Optional<TokenEntity> tokenEntity = tokenRepository.findByValue(tokenValue);
-        if(tokenEntity.isEmpty()) throw new Exception("Invalid token");
+        if(tokenEntity.isEmpty()) throw new AppException(401, "Unauthorized");
 
-        UserEntity user = userRepository.getById(tokenEntity.get().getId());
+        if(userRepository.findById(tokenEntity.get().getUserid()).isEmpty()){
+            throw new AppException(401, "Unauthorized");
+        }
+        UserEntity user = userRepository.findById(tokenEntity.get().getId()).get();
 
         Optional<OfficeEntity> officeEntity = officeRepository.findByAdministratorId(tokenEntity.get().getUserid());
-        if(officeEntity.isEmpty()) throw new Exception("No office?");
 
-        if(requestRepository.findById(requestId).isEmpty()) throw new Exception("No request?");
+        if(officeEntity.isEmpty()) throw new AppException(403, "Офис не найден");
+        if(userToOfficeRepository.findByUserIdAndOfficeId())
+
+        if(requestRepository.findById(requestId).isEmpty()) throw new AppException(400, "Данная заявка не найдена");
         RequestEntity requestEntity = requestRepository.findById(requestId).get();
 
         KeyEntity keyEntity = requestEntity.getKey();
