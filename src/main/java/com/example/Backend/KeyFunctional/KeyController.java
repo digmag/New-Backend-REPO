@@ -63,10 +63,10 @@ public class KeyController {
     public ResponseEntity<?> keyTo(@PathVariable UUID userid, @RequestHeader(name = "Authorization") String Authorization, @PathVariable UUID keyid){
         String tokenValue = Authorization.split(" ")[1];
         try{
-            return ResponseEntity.ok().body(iKeyService.transitKey(userid, tokenValue, keyid));
+            return ResponseEntity.ok().header("Access-Control-Allow-Origin","*").body(iKeyService.transitKey(userid, tokenValue, keyid));
         }
         catch (Exception e){
-            return ResponseEntity.status(400).body(e);
+            return ResponseEntity.status(400).header("Access-Control-Allow-Origin","*").body(e);
         }
     }
 
@@ -74,10 +74,10 @@ public class KeyController {
     public ResponseEntity<?> mykeys(@RequestHeader(name = "Authorization") String Authorization){
         String tokenValue = Authorization.split(" ")[1];
         try {
-            return ResponseEntity.ok().body(iKeyService.myKeys(tokenValue));
+            return ResponseEntity.ok().header("Access-Control-Allow-Origin","*").body(iKeyService.myKeys(tokenValue));
         }
         catch (Exception e){
-            return ResponseEntity.status(400).body(e);
+            return ResponseEntity.status(400).header("Access-Control-Allow-Origin","*").body(e);
         }
     }
 }
