@@ -1,10 +1,7 @@
 package com.example.Backend.KeyFunctional;
 
 import com.example.Backend.Errors.AppException;
-import com.example.Backend.Relations.UserKeyEntity;
-import com.example.Backend.Relations.UserKeyRepository;
-import com.example.Backend.Relations.UserToOffice;
-import com.example.Backend.Relations.UserToOfficeRepository;
+import com.example.Backend.Relations.*;
 import com.example.Backend.TokenFunctional.TokenRepository;
 import com.example.Backend.UserFunctional.UserEntity;
 import com.example.Backend.UserFunctional.UserRepository;
@@ -162,5 +159,33 @@ public class IKeyServiceImpl implements IKeyService {
             userKeyDTOList.add(new UserKeyDTO(userKeyEntity));
         });
         return userKeyDTOList;
+    }
+
+    @SneakyThrows
+    @Override
+    public StatusCode submit(String tokenValue, UUID id, boolean submit) {
+        if(tokenRepository.findByValue(tokenValue).isEmpty()){
+            throw new AppException(401, "Unauthorized");
+        }
+        Optional<UserEntity> userEntity = userRepository.findById(tokenRepository.findByValue(tokenValue).get().getUserid());
+        Optional<UserKeyEntity> userKeyEntity = userKeyRepository.findById(id);
+        if(userKeyEntity.isEmpty()){
+            throw new AppException(404, "Уведомление не найдено");
+        }
+        if(submit){
+            userKeyEntity.get().setStatus(StatusKey.CONFIRMED);
+            KeyEntity keyEntity = userKeyEntity.get().getKeyEntity();
+            if(userRepository.findById(userKeyEntity.get().getUserTo().getId()).isEmpty()){
+                throw new AppException(404, "пользователь не найден");
+            }
+            keyEntity.setUser(userRepository.findById(userKeyEntity.get().getUserTo().getId()).get());
+            userKeyEntity.get().setKeyEntity(keyEntity);
+            keyRepository.save(keyEntity);
+        }
+        else{
+            userKeyEntity.get().setStatus(StatusKey.DENIED);
+        }
+        userKeyRepository.deleteById(userKeyEntity.get().getId());
+        return new StatusCode(200, "Ключ передан");
     }
 }

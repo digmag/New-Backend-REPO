@@ -1,5 +1,6 @@
 package com.example.Backend.KeyFunctional;
 
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -92,6 +93,17 @@ public class KeyController {
         String tokenValue = Authorization.split(" ")[1];
         try{
             return ResponseEntity.ok().body(iKeyService.notifications(tokenValue));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(400).body(e);
+        }
+    }
+
+    @PostMapping("/submit/{id}")
+    public ResponseEntity<?> submit(@RequestHeader(name = "Authorization") String Authorization, @PathVariable UUID id, @PathParam("submit") boolean submit){
+        String tokenValue = Authorization.split(" ")[1];
+        try{
+            return ResponseEntity.ok().body(iKeyService.submit(tokenValue, id, submit));
         }
         catch (Exception e){
             return ResponseEntity.status(400).body(e);

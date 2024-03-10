@@ -4,6 +4,7 @@ import com.example.Backend.KeyFunctional.KeyEntity;
 import com.example.Backend.UserFunctional.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class UserKeyEntity {
     @Id
     @GeneratedValue(generator = "UUID")
