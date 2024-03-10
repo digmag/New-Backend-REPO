@@ -92,16 +92,17 @@ public class IRequestServiceImpl implements IRequestService {
         if(userRepository.findById(tokenEntity.get().getUserid()).isEmpty()){
             throw new AppException(401, "Unauthorized");
         }
-        UserEntity user = userRepository.findById(tokenEntity.get().getId()).get();
+        UserEntity user = userRepository.findById(tokenEntity.get().getUserid()).get();
 
-        Optional<OfficeEntity> officeEntity = officeRepository.findByAdministratorId(tokenEntity.get().getUserid());
+        Optional<OfficeEntity> officeEntity = officeRepository.findByAdministratorId(tokenEntity.get().getUserid());//сделать так, чтобы не только админ мог изменять
 
         if(officeEntity.isEmpty()) throw new AppException(403, "Офис не найден");
         if(userToOfficeRepository.findByUserIdAndOfficeId(user.getId(), officeEntity.get().getId()).isEmpty()){
             throw new AppException(403, "Пользователь не принадлежит к офису");
         }
-        if(!userToOfficeRepository.findByUserIdAndOfficeId(user.getId(), officeEntity.get().getId()).get().getRole().equals("Administrator") ||
-                !userToOfficeRepository.findByUserIdAndOfficeId(user.getId(), officeEntity.get().getId()).get().getRole().equals("Worker")){
+        var Yuser = userToOfficeRepository.findByUserIdAndOfficeId(user.getId(), officeEntity.get().getId()).get();
+        if(Yuser.getRole().equals("Student") ||
+                Yuser.getRole().equals("Teacher")){
             throw new AppException(403, "Пользователь не является работником офиса");
         }
 
@@ -119,7 +120,7 @@ public class IRequestServiceImpl implements IRequestService {
         requestEntity.setStatus(status);
         requestRepository.save(requestEntity);
 
-        return new StatusCode(200,"request updated");
+        return new StatusCode(200,"request updated");//добавить userViewDTO
     }
     @Override
     @Transactional
