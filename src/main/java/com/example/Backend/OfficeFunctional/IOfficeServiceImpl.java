@@ -6,6 +6,8 @@ import com.example.Backend.KeyFunctional.KeyEntity;
 import com.example.Backend.KeyFunctional.KeyRepository;
 import com.example.Backend.Relations.UserToOffice;
 import com.example.Backend.Relations.UserToOfficeRepository;
+import com.example.Backend.Request.RequestDTO;
+import com.example.Backend.Request.RequestRepository;
 import com.example.Backend.TokenFunctional.TokenEntity;
 import com.example.Backend.TokenFunctional.TokenRepository;
 import com.example.Backend.UserFunctional.*;
@@ -27,6 +29,7 @@ public class IOfficeServiceImpl implements IOfficeService {
     private final UserToOfficeRepository userToOfficeRepository;
     private final UserRepository userRepository;
     private final KeyRepository keyRepository;
+    private final RequestRepository requestRepository;
 
     @SneakyThrows
     @Override
@@ -114,6 +117,11 @@ public class IOfficeServiceImpl implements IOfficeService {
         if(userToOfficeRepository.findAllByOfficeId(officeid).isPresent()) {
             userToOfficeRepository.findAllByOfficeId(officeid).get().forEach(userToOffice -> {
                 officeAllinfoModel.addUser(new UserOfficeDTO(userToOffice));
+            });
+        }
+        if(requestRepository.findAllByOfficeId(officeid).isPresent()){
+            requestRepository.findAllByOfficeId(officeid).get().forEach(requestEntity -> {
+                officeAllinfoModel.addRequest(new RequestDTO(requestEntity));
             });
         }
         return new OfficeAllInfoDTO(officeAllinfoModel);

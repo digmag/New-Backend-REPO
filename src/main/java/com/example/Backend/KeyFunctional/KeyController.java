@@ -76,4 +76,14 @@ public class KeyController {
             return ResponseEntity.status(400).body(e);
         }
     }
+    @GetMapping("/list")
+    public ResponseEntity<?> listKeys(@RequestHeader(name = "Authorization") String Authorization){
+        String tokenValue = Authorization.split(" ")[1];
+        try {
+            return ResponseEntity.ok().body(iKeyService.listOfKeys(tokenValue));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(400).body(e);
+        }
+    }
 }

@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface RequestRepository extends JpaRepository<RequestEntity, UUID> {
     Optional<List<RequestEntity>> findRequestEntitiesByUserId(UUID userId);
+
+    Optional<List<RequestEntity>> findAllByOfficeId(UUID officeId);
 }

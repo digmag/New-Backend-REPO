@@ -35,7 +35,7 @@ public class IRequestServiceImpl implements IRequestService {
 
     @Override
     @SneakyThrows
-    public List<RequestDTO> getRequestList(String tokenValue){
+    public RequestList getMyRequestList(String tokenValue){
 
         Optional<TokenEntity> tokenEntity = tokenRepository.findByValue(tokenValue);
 
@@ -45,15 +45,16 @@ public class IRequestServiceImpl implements IRequestService {
 
         if(requestEntityList.isEmpty()) throw new Exception("No request");
 
-        List<RequestDTO> list = new ArrayList<>();
+        RequestList list = new RequestList();
 
         for(RequestEntity re : requestEntityList.get()){
-            list.add(new RequestDTO(re));
+            list.addToList(new RequestDTO(re));
         }
 
         return list;
 
     }
+
 
     @Override
     @SneakyThrows
@@ -68,6 +69,8 @@ public class IRequestServiceImpl implements IRequestService {
         if(key.isEmpty()) throw new Exception("Wrong OfficeName or OfficeNumber");
 
         RequestEntity newRequest = new RequestEntity(tokenEntity.get().getUserid(),requestDTO,key.get());
+
+        //if(userRepository.findById(tokenEntity.get().getUserid()).get().)
 
         requestRepository.save(newRequest);
 

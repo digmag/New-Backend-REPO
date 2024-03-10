@@ -102,6 +102,25 @@ public class IKeyServiceImpl implements IKeyService {
         return keyDTOS;
     }
 
+    @SneakyThrows
+    @Override
+    public KeysList listOfKeys(String token) {
+        if(tokenRepository.findByValue(token).isEmpty()){
+            throw new AppException(401, "Unautorized");
+        }
+        Optional<UserEntity> userEntity = userRepository.findById(tokenRepository.findByValue(token).get().getUserid());
+        if(userEntity.isEmpty()){
+            throw new AppException(401, "Unautorized");
+        }
+        List<KeyEntity> keyEntities = keyRepository.findAll();
+        KeysList keyDTOS = new KeysList();
+        keyEntities.forEach(keyEntity -> {
+            keyDTOS.addToList(new KeyDTO(keyEntity));
+        });
+        return keyDTOS;
+    }
+
+
     @Override
     public StatusCode transitKey(UUID userid, String tokenValue, UUID keyid) {
         return null;

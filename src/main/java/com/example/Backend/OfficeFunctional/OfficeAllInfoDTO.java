@@ -1,6 +1,7 @@
 package com.example.Backend.OfficeFunctional;
 
 import com.example.Backend.KeyFunctional.KeyDTO;
+import com.example.Backend.Request.RequestDTO;
 import com.example.Backend.UserFunctional.UserOfficeDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ public class OfficeAllInfoDTO {
     private UUID administratorId;
     private List<KeyDTO> officesKeys;
     private List<UserOfficeDTO> Users;
+    private List<RequestDTO> requests;
 
     public OfficeAllInfoDTO(OfficeAllinfoModel officeAllinfoModel){
         this.id = officeAllinfoModel.getId();
@@ -23,5 +25,6 @@ public class OfficeAllInfoDTO {
         this.administratorId = officeAllinfoModel.getAdministratorId();
         this.officesKeys = officeAllinfoModel.getOfficesKeys();
         this.Users = officeAllinfoModel.getUserOfficeDTOS();
+        this.requests = officeAllinfoModel.getRequests();
     }
 }

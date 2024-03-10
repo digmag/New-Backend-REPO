@@ -16,19 +16,18 @@ public class RequestController {
     private final IRequestService iRequestService;
 
     @GetMapping("/list")
-    public ResponseEntity<?> getList(@RequestHeader(name = "Authorization") String Authorization){
+    public ResponseEntity<?> getMyList(@RequestHeader(name = "Authorization") String Authorization){
         String tokenvalue = Authorization.split(" ")[1];
         try{
             return ResponseEntity
                     .ok()
-                    .body(iRequestService.getRequestList(tokenvalue));
+                    .body(iRequestService.getMyRequestList(tokenvalue));
         }
         catch (Exception e){
             return  ResponseEntity
                     .badRequest()
                     .body(e);
         }
-
     }
 
     @PostMapping("/create")

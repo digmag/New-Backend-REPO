@@ -1,6 +1,7 @@
 package com.example.Backend.KeyFunctional;
 
 
+import com.example.Backend.OfficeFunctional.OfficesList;
 import com.example.Backend.statusCode.StatusCode;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public interface IKeyService {
     StatusCode deleteKey(UUID officeId, String tokenvalue, UUID keyId);
 
     List<KeyDTO> myKeys(String tokenValue);
+
+    KeysList listOfKeys(String token);
 
     StatusCode transitKey(UUID userid, String tokenValue, UUID keyid);
 }

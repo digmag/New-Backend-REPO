@@ -10,6 +10,7 @@ import java.util.UUID;
 @Setter
 public class KeyDTO {
     private UUID keyId;
+    private UUID officeID;
     private String officeName;
     private Integer officeNumber;
     private UserViewDTO userViewDTO;
@@ -18,6 +19,7 @@ public class KeyDTO {
         this.keyId = keyEntity.getKeyId();
         this.officeName = keyEntity.getOfficeName();
         this.officeNumber = keyEntity.getOfficeNumber();
+        this.officeID = keyEntity.getOfficeId();
     }
     public KeyDTO(){}
 }
