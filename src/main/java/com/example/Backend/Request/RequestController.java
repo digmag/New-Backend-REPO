@@ -31,12 +31,13 @@ public class RequestController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createRequest(@RequestHeader(name = "Authorization") String Authorization, @RequestBody RequestDTO body){
+    public ResponseEntity<?> createRequest(@RequestHeader(name = "Authorization") String Authorization, @RequestBody RequestCreateDTO body){
         String tokenvalue = Authorization.split(" ")[1];
+        RequestDTO requestDTO = new RequestDTO(body);
         try{
             return ResponseEntity
                     .ok()
-                    .body(iRequestService.createNewRequest(tokenvalue,body));
+                    .body(iRequestService.createNewRequest(tokenvalue,requestDTO));
         }
         catch (Exception e){
             return  ResponseEntity

@@ -34,4 +34,11 @@ public class RequestDTO {
         this.keyId = entity.getKey().getKeyId();
         this.officeId = entity.getOfficeId();
     }
+    public RequestDTO(RequestCreateDTO requestCreateDTO){
+        this.requestedDateTime = requestCreateDTO.getRequestedDateTime();
+        this.requestCreationDateTime = new Date();
+        this.keyId = requestCreateDTO.getKeyId();
+        this.officeId = requestCreateDTO.getOfficeId();
+    }
+
 }
