@@ -17,7 +17,6 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-    image: docker.io/smilole/backend-java
     ports:
       - "8181:8181"
     depends_on:
