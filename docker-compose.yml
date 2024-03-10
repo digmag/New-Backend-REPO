@@ -24,6 +24,8 @@ services:
     environment:
       - SERVER_PORT= 8181
       - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/docker
+      - SPRING_DATASOURCE_USERNAME=docker
+      - SPRING_DATASOURCE_PASSWORD=docker
     networks:
       - my-network
 
