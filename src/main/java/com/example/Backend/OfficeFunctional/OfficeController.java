@@ -3,6 +3,7 @@ package com.example.Backend.OfficeFunctional;
 import com.example.Backend.Errors.AppException;
 import com.example.Backend.UserFunctional.UserAppointmentDTO;
 import com.example.Backend.UserFunctional.UserDTO;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -71,6 +72,21 @@ public class OfficeController {
             return ResponseEntity
                     .ok()
                     .body(iOfficeService.allinfo(tokenValue, id));
+        }
+        catch (Exception e){
+            return ResponseEntity
+                    .status(400)
+                    .body(e);
+        }
+    }
+    @GetMapping("/list")
+    public ResponseEntity<?> getAllOffices(@RequestHeader(name = "Authorization") String Authorization, @PathParam("name") String name){
+        String tokenValue = Authorization.split(" ")[1];
+        if(name == null) name ="";
+        try {
+            return ResponseEntity
+                    .ok()
+                    .body(iOfficeService.listOfOffices(tokenValue, name));
         }
         catch (Exception e){
             return ResponseEntity

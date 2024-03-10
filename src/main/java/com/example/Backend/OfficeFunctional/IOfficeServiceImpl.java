@@ -118,4 +118,18 @@ public class IOfficeServiceImpl implements IOfficeService {
         }
         return new OfficeAllInfoDTO(officeAllinfoModel);
     }
+
+    @SneakyThrows
+    @Override
+    public OfficesList listOfOffices(String token, String name) {
+        if(tokenRepository.findByValue(token).isEmpty()){
+            throw new AppException(401, "Unauthorized");
+        }
+        OfficesList officesList = new OfficesList();
+        officeRepository.findAllByName(name).forEach(officeEntity -> {
+            OfficeDTO officeDTO = new OfficeDTO(officeEntity);
+            officesList.addToList(officeDTO);
+        });
+        return officesList;
+    }
 }
