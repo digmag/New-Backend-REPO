@@ -97,7 +97,13 @@ public class IRequestServiceImpl implements IRequestService {
         Optional<OfficeEntity> officeEntity = officeRepository.findByAdministratorId(tokenEntity.get().getUserid());
 
         if(officeEntity.isEmpty()) throw new AppException(403, "Офис не найден");
-        if(userToOfficeRepository.findByUserIdAndOfficeId())
+        if(userToOfficeRepository.findByUserIdAndOfficeId(user.getId(), officeEntity.get().getId()).isEmpty()){
+            throw new AppException(403, "Пользователь не принадлежит к офису");
+        }
+        if(!userToOfficeRepository.findByUserIdAndOfficeId(user.getId(), officeEntity.get().getId()).get().getRole().equals("Administrator") ||
+                !userToOfficeRepository.findByUserIdAndOfficeId(user.getId(), officeEntity.get().getId()).get().getRole().equals("Worker")){
+            throw new AppException(403, "Пользователь не является работником офиса");
+        }
 
         if(requestRepository.findById(requestId).isEmpty()) throw new AppException(400, "Данная заявка не найдена");
         RequestEntity requestEntity = requestRepository.findById(requestId).get();
