@@ -17,4 +17,6 @@ public interface IKeyService {
     KeysList listOfKeys(String token);
 
     StatusCode transitKey(UUID userid, String tokenValue, UUID keyid);
+
+    List<UserKeyDTO> notifications(String tokenValue);
 }

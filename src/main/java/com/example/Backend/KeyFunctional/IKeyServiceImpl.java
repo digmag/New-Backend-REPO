@@ -1,6 +1,8 @@
 package com.example.Backend.KeyFunctional;
 
 import com.example.Backend.Errors.AppException;
+import com.example.Backend.Relations.UserKeyEntity;
+import com.example.Backend.Relations.UserKeyRepository;
 import com.example.Backend.Relations.UserToOffice;
 import com.example.Backend.Relations.UserToOfficeRepository;
 import com.example.Backend.TokenFunctional.TokenRepository;
@@ -23,6 +25,7 @@ public class IKeyServiceImpl implements IKeyService {
     private final UserToOfficeRepository userToOfficeRepository;
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
+    private final UserKeyRepository userKeyRepository;
     @SneakyThrows
     @Override
     public KeyDTO createKey(UUID officeId, String tokenvalue, KeyDTO keyDTO) {
@@ -121,8 +124,43 @@ public class IKeyServiceImpl implements IKeyService {
     }
 
 
+    @SneakyThrows
     @Override
     public StatusCode transitKey(UUID userid, String tokenValue, UUID keyid) {
-        return null;
+        if(tokenRepository.findByValue(tokenValue).isEmpty()){
+            throw new AppException(401, "Unauthorization");
+        }
+
+        if(userRepository.findById(userid).isEmpty() || userRepository.findById(tokenRepository.findByValue(tokenValue).get().getUserid()).isEmpty()){
+            throw new AppException(404, "User not found");
+        }
+        UserEntity userFrom = userRepository.findById(tokenRepository.findByValue(tokenValue).get().getUserid()).get();
+        UserEntity userTo = userRepository.findById(userid).get();
+        if(keyRepository.findById(keyid).isEmpty()){
+            throw new AppException(404, "Ключ не найден");
+        }
+        KeyEntity keyEntity = keyRepository.findById(keyid).get();
+        UserKeyEntity userKeyEntity = new UserKeyEntity(userFrom, userTo, keyEntity);
+        userKeyRepository.save(userKeyEntity);
+        return new StatusCode(200, "Заявка на передачу создана.");
+    }
+
+    @SneakyThrows
+    @Override
+    public List<UserKeyDTO> notifications(String tokenValue) {
+        if(tokenRepository.findByValue(tokenValue).isEmpty()){
+            throw new AppException(401, "Unauthorized");
+        }
+        if(userRepository.findById(tokenRepository.findByValue(tokenValue).get().getUserid()).isEmpty()){
+            throw new AppException(404, "User not found");
+        }
+        List<UserKeyEntity> userKeyEntities = userKeyRepository.findAllUserKeyEntityByUserTo(
+                userRepository.findById(tokenRepository.findByValue(tokenValue).get().getUserid()).get()
+        );
+        List<UserKeyDTO> userKeyDTOList = new ArrayList<>();
+        userKeyEntities.forEach(userKeyEntity -> {
+            userKeyDTOList.add(new UserKeyDTO(userKeyEntity));
+        });
+        return userKeyDTOList;
     }
 }
