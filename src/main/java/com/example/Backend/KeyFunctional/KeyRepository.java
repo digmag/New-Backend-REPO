@@ -12,5 +12,5 @@ public interface KeyRepository extends JpaRepository<KeyEntity, UUID> {
     Optional<List<KeyEntity>> findByOfficeId(UUID officeId);
     Optional<KeyEntity> findKeyEntityByOfficeId(UUID officeId);
 
-    List<KeyEntity> findAllByUserEntity(UUID user_id);
+    List<KeyEntity> findAllByUser(UserEntity userEntity);
 }
