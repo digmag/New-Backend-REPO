@@ -157,7 +157,7 @@ public class IRequestServiceImpl implements IRequestService {
             UserEntity userEntity = userRepository.findById(
                     requestEntity.getUserId()
             ).get();
-            keyEntity.setUser(userEntity;
+            keyEntity.setUser(userEntity);
             keyRepository.save(keyEntity);
         }
 
