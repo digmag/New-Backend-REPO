@@ -18,6 +18,7 @@ import org.apache.catalina.User;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -77,37 +78,13 @@ public class IRequestServiceImpl implements IRequestService {
 
         //проверка на учителя
         if(userToOfficeRepository.findByUserIdAndOfficeId(tokenEntity.get().getUserid(),requestDTO.getOfficeId()).get().getRole().equals("Teacher")){
-            if(requestRepository.findAllByKeyAndRequestedDateTimeAndStatus(key.get(),requestDTO.getRequestedDateTime(),RequestStatus.APPROVED).isEmpty()
-                    && requestRepository.findAllByKeyAndRequestedDateTimeAndStatus(key.get(),requestDTO.getRequestedDateTime(),RequestStatus.GIVEN).isEmpty()){
+            if(requestRepository.findByUserIdAndRequestedDateTimeAndKeyAndStatus(tokenEntity.get().getUserid(),requestDTO.getRequestedDateTime().minusWeeks(1),key.get(),RequestStatus.GIVEN).isPresent()){
                 newRequest.setStatus(RequestStatus.APPROVED);
-            } else {
-                boolean flag = false;
-                for (RequestEntity e : requestRepository.findAllByKeyAndRequestedDateTimeAndStatus(key.get(), requestDTO.getRequestedDateTime(), RequestStatus.APPROVED).get()) {
-                    if (userToOfficeRepository.findByUserIdAndOfficeId(e.getUserId(), requestDTO.getOfficeId()).get().getRole().equals("Teacher")) {
-                        flag=true;
-                    }
-                    if (flag) {
-                        break;
-                    }
-                }
-                if(!flag){
-                    for (RequestEntity e : requestRepository.findAllByKeyAndRequestedDateTimeAndStatus(key.get(), requestDTO.getRequestedDateTime(), RequestStatus.GIVEN).get()) {
-                        if (userToOfficeRepository.findByUserIdAndOfficeId(e.getUserId(), requestDTO.getOfficeId()).get().getRole().equals("Teacher")) {
-                            flag=true;
-                        }
-                        if (flag) {
-                            break;
-                        }
-                    }
-                }
-                if(!flag){
-                    newRequest.setStatus(RequestStatus.APPROVED);
-                }
             }
         } // проверка на занятость ключа учителем
         else {
             boolean flag = false;
-            for (RequestEntity e : requestRepository.findAllByKeyAndRequestedDateTimeAndStatus(key.get(), requestDTO.getRequestedDateTime(), RequestStatus.APPROVED).get()) {
+            for (RequestEntity e : requestRepository.findAllByKeyAndRequestedDateTimeAndStatusOrStatus(key.get(), requestDTO.getRequestedDateTime(), RequestStatus.APPROVED, RequestStatus.GIVEN).get()) {
                 if (userToOfficeRepository.findByUserIdAndOfficeId(e.getUserId(), requestDTO.getOfficeId()).get().getRole().equals("Teacher")) {
                     flag=true;
                     newRequest.setStatus(RequestStatus.DECLINED);
@@ -171,12 +148,12 @@ public class IRequestServiceImpl implements IRequestService {
     @Transactional
     @Scheduled(cron = "0 0 0 * * ?")
     public void deletePastRequest(){
-        Date NowDate = new Date();
+        LocalDateTime NowDate = LocalDateTime.now();
         List<RequestEntity> requests = requestRepository.findAll();
         requests.forEach(request ->{
-            if(NowDate.after(request.getRequestedDateTime()) && (request.getStatus() == RequestStatus.DECLINED
-                                                             || request.getStatus() == RequestStatus.EXPIRED
-                                                             || request.getStatus() != RequestStatus.IN_PROCESS)){
+            if(NowDate.isAfter(request.getRequestedDateTime()) && (request.getStatus() == RequestStatus.DECLINED
+                    || request.getStatus() == RequestStatus.EXPIRED
+                    || request.getStatus() != RequestStatus.IN_PROCESS)){
                 requestRepository.deleteById(request.getId());
             }
         });

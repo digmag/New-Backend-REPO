@@ -14,5 +14,7 @@ public interface RequestRepository extends JpaRepository<RequestEntity, UUID> {
 
     Optional<List<RequestEntity>> findAllByOfficeId(UUID officeId);
 
-    Optional<List<RequestEntity>> findAllByKeyAndRequestedDateTimeAndStatus(KeyEntity keyEntity, Date requestedDateTime, RequestStatus status);
+    Optional<List<RequestEntity>> findAllByKeyAndRequestedDateTimeAndStatusOrStatus(KeyEntity keyEntity, LocalDateTime requestedDateTime, RequestStatus status1, RequestStatus status2);
+
+    Optional<RequestEntity> findByUserIdAndRequestedDateTimeAndKeyAndStatus(UUID userId, LocalDateTime requestedDateTime, KeyEntity key, RequestStatus status1);
 }

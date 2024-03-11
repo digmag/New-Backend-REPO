@@ -29,8 +29,8 @@ public class RequestEntity {
     private UUID officeId;
 
     private RequestStatus status;
-    private Date requestCreationDateTime;
-    private Date requestedDateTime;
+    private LocalDateTime requestCreationDateTime;
+    private LocalDateTime requestedDateTime;
 
     @ManyToOne
     private KeyEntity key;

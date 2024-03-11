@@ -18,13 +18,13 @@ public class RequestDTO {
     private String name;
     private int number;
     private RequestStatus status;
-    private Date requestCreationDateTime;
-    private Date requestedDateTime;
+    private LocalDateTime requestCreationDateTime;
+    private LocalDateTime requestedDateTime;
 
     private UUID keyId;
     private UUID officeId;
 
-    public RequestDTO(Date requestedDateTime, UUID keyId, UUID officeId) {
+    public RequestDTO(LocalDateTime requestedDateTime, UUID keyId, UUID officeId) {
         this.requestedDateTime = requestedDateTime;
         this.keyId = keyId;
         this.officeId = officeId;
@@ -42,7 +42,7 @@ public class RequestDTO {
     }
     public RequestDTO(RequestCreateDTO requestCreateDTO){
         this.requestedDateTime = requestCreateDTO.getRequestedDateTime();
-        this.requestCreationDateTime = new Date();
+        this.requestCreationDateTime = LocalDateTime.now();
         this.keyId = requestCreateDTO.getKeyId();
         this.officeId = requestCreateDTO.getOfficeId();
     }
