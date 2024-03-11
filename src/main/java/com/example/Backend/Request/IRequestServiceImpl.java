@@ -74,7 +74,48 @@ public class IRequestServiceImpl implements IRequestService {
 
         RequestEntity newRequest = new RequestEntity(tokenEntity.get().getUserid(),requestDTO,key.get());
 
-        //if(userRepository.findById(tokenEntity.get().getUserid()).get().)
+        //проверка на учителя
+        if(userToOfficeRepository.findByUserIdAndOfficeId(tokenEntity.get().getUserid(),requestDTO.getOfficeId()).get().getRole().equals("Teacher")){
+            if(requestRepository.findAllByKeyAndRequestedDateTimeAndStatus(key.get(),requestDTO.getRequestedDateTime(),RequestStatus.APPROVED).isEmpty()
+                    && requestRepository.findAllByKeyAndRequestedDateTimeAndStatus(key.get(),requestDTO.getRequestedDateTime(),RequestStatus.GIVEN).isEmpty()){
+                newRequest.setStatus(RequestStatus.APPROVED);
+            } else {
+                boolean flag = false;
+                for (RequestEntity e : requestRepository.findAllByKeyAndRequestedDateTimeAndStatus(key.get(), requestDTO.getRequestedDateTime(), RequestStatus.APPROVED).get()) {
+                    if (userToOfficeRepository.findByUserIdAndOfficeId(e.getUserId(), requestDTO.getOfficeId()).get().getRole().equals("Teacher")) {
+                        flag=true;
+                    }
+                    if (flag) {
+                        break;
+                    }
+                }
+                if(!flag){
+                    for (RequestEntity e : requestRepository.findAllByKeyAndRequestedDateTimeAndStatus(key.get(), requestDTO.getRequestedDateTime(), RequestStatus.GIVEN).get()) {
+                        if (userToOfficeRepository.findByUserIdAndOfficeId(e.getUserId(), requestDTO.getOfficeId()).get().getRole().equals("Teacher")) {
+                            flag=true;
+                        }
+                        if (flag) {
+                            break;
+                        }
+                    }
+                }
+                if(!flag){
+                    newRequest.setStatus(RequestStatus.APPROVED);
+                }
+            }
+        } // проверка на занятость ключа учителем
+        else {
+            boolean flag = false;
+            for (RequestEntity e : requestRepository.findAllByKeyAndRequestedDateTimeAndStatus(key.get(), requestDTO.getRequestedDateTime(), RequestStatus.APPROVED).get()) {
+                if (userToOfficeRepository.findByUserIdAndOfficeId(e.getUserId(), requestDTO.getOfficeId()).get().getRole().equals("Teacher")) {
+                    flag=true;
+                    newRequest.setStatus(RequestStatus.DECLINED);
+                }
+                if (flag) {
+                    break;
+                }
+            }
+        }
 
         requestRepository.save(newRequest);
 
