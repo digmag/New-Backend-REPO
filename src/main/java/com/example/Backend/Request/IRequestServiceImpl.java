@@ -77,15 +77,17 @@ public class IRequestServiceImpl implements IRequestService {
         RequestEntity newRequest = new RequestEntity(tokenEntity.get().getUserid(),requestDTO,key.get());
 
         //проверка на учителя
-        if(userToOfficeRepository.findByUserIdAndOfficeId(tokenEntity.get().getUserid(),requestDTO.getOfficeId()).get().getRole().equals("Teacher")){
+        if(userToOfficeRepository.findByUserIdAndOfficeId(tokenEntity.get().getUserid(),requestDTO.getOfficeId()).isPresent()
+                && userToOfficeRepository.findByUserIdAndOfficeId(tokenEntity.get().getUserid(),requestDTO.getOfficeId()).get().getRole().equals("Teacher")){
             if(requestRepository.findByUserIdAndRequestedDateTimeAndKeyAndStatus(tokenEntity.get().getUserid(),requestDTO.getRequestedDateTime().minusWeeks(1),key.get(),RequestStatus.GIVEN).isPresent()){
                 newRequest.setStatus(RequestStatus.APPROVED);
             }
         } // проверка на занятость ключа учителем
         else {
             boolean flag = false;
-            for (RequestEntity e : requestRepository.findAllByKeyAndRequestedDateTimeAndStatusOrStatus(key.get(), requestDTO.getRequestedDateTime(), RequestStatus.APPROVED, RequestStatus.GIVEN).get()) {
-                if (userToOfficeRepository.findByUserIdAndOfficeId(e.getUserId(), requestDTO.getOfficeId()).get().getRole().equals("Teacher")) {
+            for (RequestEntity e : requestRepository.findAllByKeyAndRequestedDateTimeAndStatusOrStatus(key.get(), requestDTO.getRequestedDateTime(), RequestStatus.APPROVED, RequestStatus.GIVEN)) {
+                if (userToOfficeRepository.findByUserIdAndOfficeId(e.getUserId(), requestDTO.getOfficeId()).isPresent()
+                        && userToOfficeRepository.findByUserIdAndOfficeId(e.getUserId(), requestDTO.getOfficeId()).get().getRole().equals("Teacher")) {
                     flag=true;
                     newRequest.setStatus(RequestStatus.DECLINED);
                 }
