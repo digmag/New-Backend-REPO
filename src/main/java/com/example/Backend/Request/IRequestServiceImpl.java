@@ -154,7 +154,10 @@ public class IRequestServiceImpl implements IRequestService {
         if(!keyEntity.getOfficeId().equals(officeEntity.get().getId())) throw new Exception("Key doesn't belong to this office");
 
         if(status == RequestStatus.GIVEN){
-            keyEntity.setUser(user);
+            UserEntity userEntity = userRepository.findById(
+                    requestEntity.getUserId()
+            ).get();
+            keyEntity.setUser(userEntity;
             keyRepository.save(keyEntity);
         }
 
