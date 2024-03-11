@@ -11,6 +11,5 @@ import java.util.UUID;
 public interface KeyRepository extends JpaRepository<KeyEntity, UUID> {
     Optional<List<KeyEntity>> findByOfficeId(UUID officeId);
     Optional<KeyEntity> findKeyEntityByOfficeIdAndKeyId(UUID officeId, UUID keyId);
-
     List<KeyEntity> findAllByUser(UserEntity userEntity);
 }

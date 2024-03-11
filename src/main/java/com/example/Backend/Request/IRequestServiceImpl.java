@@ -52,7 +52,8 @@ public class IRequestServiceImpl implements IRequestService {
         RequestList list = new RequestList();
 
         for(RequestEntity re : requestEntityList.get()){
-            list.addToList(new RequestDTO(re));
+            KeyEntity key = keyRepository.findKeyEntityByOfficeIdAndKeyId(re.getOfficeId(), re.getKey().getKeyId()).get();
+            list.addToList(new RequestDTO(re, key.getOfficeName()));
         }
 
         return list;

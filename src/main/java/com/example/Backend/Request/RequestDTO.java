@@ -13,6 +13,7 @@ public class RequestDTO {
 
     private UUID id;
 
+    private String name;
     private RequestStatus status;
     private Date requestCreationDateTime;
     private Date requestedDateTime;
@@ -26,7 +27,8 @@ public class RequestDTO {
         this.officeId = officeId;
     }
 
-    public RequestDTO(RequestEntity entity){
+    public RequestDTO(RequestEntity entity, String name){
+        this.name = name;
         this.id = entity.getId();
         this.status = entity.getStatus();
         this.requestCreationDateTime = entity.getRequestCreationDateTime();
