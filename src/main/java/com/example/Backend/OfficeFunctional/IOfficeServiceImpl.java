@@ -108,6 +108,9 @@ public class IOfficeServiceImpl implements IOfficeService {
         if(officeRepository.findById(officeid).isEmpty()){
             throw new AppException(400, "Офис не найден.");
         }
+        if(userToOfficeRepository.findByUserIdAndOfficeId(tokenEntityOptional.get().getUserid(), officeid).isEmpty()){
+            throw new AppException(403, "Доступ запрещен");
+        }
         OfficeAllinfoModel officeAllinfoModel = new OfficeAllinfoModel(officeRepository.findById(officeid).get());
         if(keyRepository.findByOfficeId(officeid).isPresent()) {
             keyRepository.findByOfficeId(officeid).get().forEach(keyEntity -> {
